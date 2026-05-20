@@ -8,38 +8,20 @@ const playlistContainer = document.getElementById('playlist-container');
 // Global control state for live console testing
 window.videoState = {
     catalog: [...videoCatalog],
-    currentVideoId: null,
-    
-    // Sort logic functions exposed to console
-    sortByNewest: () => {
-        window.videoState.catalog.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-        renderPlaylist();
-    },
-    sortByOldest: () => {
-        window.videoState.catalog.sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt));
-        renderPlaylist();
-    }
+    currentVideoId: null
 };
 
 function playVideo(videoObj) {
     window.videoState.currentVideoId = videoObj.id;
-    viewport.innerHTML = ''; // Wipe out previous layout structural footprint
+    viewport.innerHTML = ''; // Wipe out previous iframe footprint
 
-    if (videoObj.type === 'youtube') {
-        // Embed pathway without tracker parameters
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/${videoObj.youtubeId}?autoplay=1&modestbranding=1&rel=0`;
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-        iframe.allowFullscreen = true;
-        viewport.appendChild(iframe);
-    } else if (videoObj.type === 'direct') {
-        // Native fallback engine channel
-        const video = document.createElement('video');
-        video.src = videoObj.videoUrl;
-        video.controls = true;
-        video.autoplay = true;
-        viewport.appendChild(video);
-    }
+    const iframe = document.createElement('iframe');
+    // Using YouTube ID directly since it matches videoObj.id now
+    iframe.src = `https://www.youtube.com/embed/${videoObj.id}?autoplay=1&modestbranding=1&rel=0`;
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allowFullscreen = true;
+    
+    viewport.appendChild(iframe);
 
     titleDisplay.innerText = videoObj.title;
     descDisplay.innerText = videoObj.description;
@@ -49,18 +31,18 @@ function playVideo(videoObj) {
 function renderPlaylist() {
     playlistContainer.innerHTML = '';
     
-    window.videoState.catalog.forEach(video => {
+    window.videoState.catalog.forEach((video, index) => {
         const card = document.createElement('div');
         card.className = 'thumb-card';
         card.setAttribute('data-id', video.id);
         
-        const dateObj = new Date(video.publishedAt);
-        const displayDate = `${dateObj.getFullYear()}/${String(dateObj.getMonth() + 1).padStart(2, '0')}`;
+        // Reversed count so bottom video is #1, top is the highest/newest number
+        const videoNumber = window.videoState.catalog.length - index;
 
         card.innerHTML = `
             <div class="thumb-meta">
-                <div>${video.type.toUpperCase()}</div>
-                <div style="font-size:0.65rem; opacity:0.7; margin-top:3px;">${displayDate}</div>
+                <div>YOUTUBE</div>
+                <div style="font-size:0.65rem; opacity:0.7; margin-top:3px;">#${videoNumber}</div>
             </div>
             <div class="thumb-details">
                 <h4>${escapeHTML(video.title)}</h4>
@@ -71,7 +53,6 @@ function renderPlaylist() {
         card.addEventListener('click', () => playVideo(video));
         playlistContainer.appendChild(card);
     });
-    updateActiveCardUI();
 }
 
 function updateActiveCardUI() {
@@ -89,8 +70,7 @@ function escapeHTML(str) {
 }
 
 function init() {
-    // Force default chronological sorting algorithm down descending array timeline
-    window.videoState.sortByNewest();
+    renderPlaylist();
     
     if (window.videoState.catalog.length > 0) {
         playVideo(window.videoState.catalog[0]);
