@@ -1,25 +1,79 @@
-import { generateGreeting } from './utils.js';
+import { videoCatalog } from './catalog.js';
 
-// DOM Elements
-const statusText = document.getElementById('status');
-const actionButton = document.getElementById('action-btn');
+const videoPlayer = document.getElementById('main-video-element');
+const titleDisplay = document.getElementById('video-title');
+const descDisplay = document.getElementById('video-desc');
+const playlistContainer = document.getElementById('playlist-container');
 
-// Define appState directly on the global window object
-window.appState = {
-    clickCount: 0,
-    userName: 'Explorer'
+// Expose state globally so users can query the player via DevTools
+window.videoState = {
+    catalog: videoCatalog,
+    currentVideoId: null,
+    isPlaying: false
 };
 
-// Event Handler
-actionButton.addEventListener('click', () => {
-    // Accessing it globally now
-    window.appState.clickCount++;
+/**
+ * Changes the source track of the native HTML5 player engine
+ */
+function playVideo(videoObj) {
+    window.videoState.currentVideoId = videoObj.id;
     
-    if (window.appState.clickCount === 1) {
-        statusText.innerText = generateGreeting(window.appState.userName);
-    } else {
-        statusText.innerText = `You've clicked this button ${window.appState.clickCount} times. Still zero bundlers involved!`;
-    }
-});
+    // Update active player properties directly
+    videoPlayer.src = videoObj.videoUrl;
+    titleDisplay.innerText = videoObj.title;
+    descDisplay.innerText = videoObj.description;
+    
+    window.videoState.isPlaying = true;
+    
+    // Refresh visual borders in playlist sidebar
+    updateActiveCardUI();
+}
 
-console.log("Main application loaded. Type 'window.appState' in this console to inspect or modify the state!");
+/**
+ * Generates and appends standard DOM nodes for each video in the list
+ */
+function renderPlaylist() {
+    playlistContainer.innerHTML = '';
+    
+    window.videoState.catalog.forEach(video => {
+        const card = document.createElement('div');
+        card.className = `thumb-card`;
+        card.setAttribute('data-id', video.id);
+        
+        card.innerHTML = `
+            <div class="thumb-img">${video.category}</div>
+            <div class="thumb-details">
+                <h4>${escapeHTML(video.title)}</h4>
+                <p>${escapeHTML(video.category)}</p>
+            </div>
+        `;
+        
+        // Native event registration without heavy wrappers
+        card.addEventListener('click', () => playVideo(video));
+        playlistContainer.appendChild(card);
+    });
+}
+
+function updateActiveCardUI() {
+    document.querySelectorAll('.thumb-card').forEach(card => {
+        if (card.getAttribute('data-id') === window.videoState.currentVideoId) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
+        }
+    });
+}
+
+function escapeHTML(str) {
+    return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function init() {
+    renderPlaylist();
+    // Default to track 1 on load
+    if (window.videoState.catalog.length > 0) {
+        playVideo(window.videoState.catalog[0]);
+    }
+}
+
+init();
