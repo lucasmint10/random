@@ -30,13 +30,58 @@ export const videoCatalog = [
         description: "piano explosion!",
     },
     {
-        id: "Flk_A16_EJ4",
-        title: "CRIM3S - lost (XVA Remix)",
+        id: "7W5bZJY2IPI",
+        title: "CRIM3S - lost (Slaughterhouse)",
         description: "Creppy...",
     },
     {
         id: "0hyklaV6st8",
         title: "William Tell Overture but the pianist has ADHD.",
         description: "Pianist really has ADHD.",
+    },
+    {
+        id: "IAEU6Ay7Xtk",
+        title: "KzX - Stalemate",
+        description: "Grief GD.",
+    },
+    {
+        id: "0ZUoFPLlVQU",
+        title: "Creo - Sphere",
+        description: "A sphere.",
+    },
+    {
+        id: "ol665FJEqCQ",
+        title: "Forsaken Neon",
+        description: "WE ARE VIBING WITH THIS ONE",
+    },
+    {
+        id: "9wNXRkmgd9w",
+        title: "The Failling Mysts",
+        description: "THIS IS THE GOOD ONES",
+    },
+    {
+        id: "KexhCTpuQZY",
+        title: "TON 618",
+        description: "One of the most impossible levels in GD.",
+    },
+    {
+        id: "SuaAscUC8UM",
+        title: "Firework (GD)",
+        description: "Fireworks!",
+    },
+    {
+        id: "35SESVa3vdE",
+        title: "FEMBOY CIRCLES",
+        description: "Why did I even put it here - Lucas Mint",
+    },
+    {
+        id: "F_TV4vZRSE8",
+        title: "Lunar Abyss",
+        description: "dun dun",
+    },
+    {
+        id: "nNC6aTSKiwk",
+        title: "Bad Apple played in Tesla coil + LaserShow",
+        description: "His energy bill is on the trillions",
     }
 ];
