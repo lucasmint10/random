@@ -3,129 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenSource Video Player</title>
+    <title>My Unfiltered Video Feed</title>
     <style>
-        body {
-            background: #0f0f0f;
-            color: #aaaaaa;
-            font-family: system-ui, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background: #202020;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #303030;
-        }
-        header h1 {
-            margin: 0;
-            color: #fff;
-            font-size: 1.5rem;
-        }
-        .container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            padding: 1.5rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        @media (min-width: 900px) {
-            .container {
-                grid-template-columns: 2.5fr 1fr;
-            }
-        }
-        .main-player {
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        video {
-            width: 100%;
-            display: block;
-            aspect-ratio: 16 / 9;
-        }
-        .video-info {
-            padding: 1rem 0;
-        }
-        .video-info h2 {
-            color: #fff;
-            margin: 0 0 0.5rem 0;
-        }
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .thumb-card {
-            display: flex;
-            gap: 0.75rem;
-            background: #1c1c1c;
-            padding: 0.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
-            border: 1px solid transparent;
-        }
-        .thumb-card:hover {
-            background: #272727;
-        }
-        .thumb-card.active {
-            border-color: #ff0000;
-            background: #272727;
-        }
-        .thumb-img {
-            width: 120px;
-            aspect-ratio: 16 / 9;
-            background: #333;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .thumb-details h4 {
-            color: #fff;
-            margin: 0 0 0.25rem 0;
-            font-size: 0.95rem;
-        }
-        .thumb-details p {
-            margin: 0;
-            font-size: 0.8rem;
-        }
+        body { background: #0f0f0f; color: #aaaaaa; font-family: system-ui, sans-serif; margin: 0; padding: 0; }
+        header { background: #202020; padding: 1rem 2rem; display: flex; justify-content: space-between; border-bottom: 1px solid #303030; }
+        header h1 { margin: 0; color: #fff; font-size: 1.3rem; }
+        .container { display: grid; grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
+        @media (min-width: 900px) { .container { grid-template-columns: 2.5fr 1fr; } }
+        .player-viewport { background: #000; border-radius: 8px; overflow: hidden; aspect-ratio: 16 / 9; width: 100%; position: relative; }
+        .player-viewport iframe, .player-viewport video { width: 100%; height: 100%; border: none; display: block; }
+        .video-info { padding: 1rem 0; }
+        .video-info h2 { color: #fff; margin: 0 0 0.5rem 0; }
+        .sidebar { display: flex; flex-direction: column; gap: 0.75rem; max-height: 80vh; overflow-y: auto; padding-right: 5px; }
+        .thumb-card { display: flex; gap: 0.75rem; background: #1c1c1c; padding: 0.6rem; border-radius: 6px; cursor: pointer; border: 1px solid transparent; }
+        .thumb-card:hover { background: #272727; }
+        .thumb-card.active { border-color: #ff0000; background: #272727; }
+        .thumb-meta { width: 90px; background: #333; border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 0.75rem; font-weight: bold; text-align: center; padding: 5px; box-sizing: border-box; }
+        .thumb-details h4 { color: #fff; margin: 0 0 0.25rem 0; font-size: 0.9rem; line-height: 1.2; }
+        .thumb-details p { margin: 0; font-size: 0.75rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Buildless Video Catalog</h1>
-        <span>Open DevTools Console to inspect window.videoState</span>
+        <h1>Custom Pipeline Stream</h1>
+        <span>Type <code>window.videoState.sortByOldest()</code> in console to flip timeline order!</span>
     </header>
 
     <div class="container">
-        <!-- Main Video Area -->
         <div class="theater">
-            <div class="main-player">
-                <video id="main-video-element" controls autoplay></video>
-            </div>
+            <!-- Dynamic Injection Viewport -->
+            <div class="player-viewport" id="viewport-engine"></div>
             <div class="video-info">
-                <h2 id="video-title">Select a video to play</h2>
+                <h2 id="video-title">Loading pipeline...</h2>
                 <p id="video-desc"></p>
             </div>
         </div>
-
-        <!-- Sidebar Playlist -->
-        <div class="sidebar" id="playlist-container">
-            <!-- Cards will be dynamically loaded here -->
-        </div>
+        <div class="sidebar" id="playlist-container"></div>
     </div>
 
-    <!-- Entry Point -->
     <script type="module" src="./src/main.js"></script>
 </body>
 </html>
