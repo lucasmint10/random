@@ -1,25 +1,25 @@
 import { generateGreeting } from './utils.js';
 
-// Dom Elements
+// DOM Elements
 const statusText = document.getElementById('status');
 const actionButton = document.getElementById('action-btn');
 
-// Application State
-const appState = {
+// Define appState directly on the global window object
+window.appState = {
     clickCount: 0,
     userName: 'Explorer'
 };
 
 // Event Handler
 actionButton.addEventListener('click', () => {
-    appState.clickCount++;
+    // Accessing it globally now
+    window.appState.clickCount++;
     
-    if (appState.clickCount === 1) {
-        // Use our imported native module function
-        statusText.innerText = generateGreeting(appState.userName);
+    if (window.appState.clickCount === 1) {
+        statusText.innerText = generateGreeting(window.appState.userName);
     } else {
-        statusText.innerText = `You've clicked this button ${appState.clickCount} times. Still zero bundlers involved!`;
+        statusText.innerText = `You've clicked this button ${window.appState.clickCount} times. Still zero bundlers involved!`;
     }
 });
 
-console.log("Main application loaded successfully. Try modifying appState in your console!");
+console.log("Main application loaded. Type 'window.appState' in this console to inspect or modify the state!");
